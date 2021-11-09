@@ -13,6 +13,9 @@ import android.widget.TextView;
 public class Registration extends AppCompatActivity {
 
     private EditText username;
+    private EditText phone;
+    private EditText email;
+    private EditText birthday;
     private EditText password;
     private EditText confirm_password;
     private TextView textView;
@@ -23,6 +26,9 @@ public class Registration extends AppCompatActivity {
         setContentView(R.layout.activity_registration);
 
         username = (EditText) findViewById(R.id.reg_username);
+        phone = (EditText) findViewById(R.id.reg_phone);
+        email = (EditText) findViewById(R.id.reg_email);
+        birthday = (EditText) findViewById(R.id.reg_birthday);
         password = (EditText) findViewById(R.id.reg_password);
         confirm_password = (EditText) findViewById(R.id.reg_confirm);
         textView = (TextView) findViewById(R.id.textView2);
