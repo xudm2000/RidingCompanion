@@ -11,10 +11,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 public class InfoFragment extends Fragment {
 
-    private Button button;
+    private TextView username;
+    private EditText password;
+    private EditText confirm_password;
+    private EditText email;
+    private EditText phone;
+    private Button logout;
 
     public InfoFragment() {
         // Required empty public constructor
@@ -25,13 +32,24 @@ public class InfoFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View fragmentView = inflater.inflate(R.layout.fragment_info, container, false);
-        button = (Button) fragmentView.findViewById(R.id.logout);
-        button.setOnClickListener(new View.OnClickListener() {
+        logout = (Button) fragmentView.findViewById(R.id.logout);
+        logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 logout();
             }
         });
+
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("com.example.ridingcompanion", Context.MODE_PRIVATE);
+        username = (TextView) fragmentView.findViewById(R.id.username_show);
+        password = (EditText) fragmentView.findViewById(R.id.editTextPassword);
+        confirm_password = (EditText) fragmentView.findViewById(R.id.editTextConfirmPassword);
+        email = (EditText) fragmentView.findViewById(R.id.editTextEmail);
+        phone = (EditText) fragmentView.findViewById(R.id.editTextPhone);
+
+        String current_username = sharedPreferences.getString("current", "");
+        username.setText(current_username);
+
         return fragmentView;
     }
 

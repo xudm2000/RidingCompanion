@@ -6,6 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".RideFragment">
 
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/fragment_map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toTopOf="@id/startRiding"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <Button
         android:id="@+id/startRiding"
         android:layout_width="wrap_content"

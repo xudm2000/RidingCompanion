@@ -1,8 +1,11 @@
 package com.example.ridingcompanion;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -27,6 +30,11 @@ public class MainPage extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().replace(R.id.container, new CheckinFragment()).commit();
             buttonNavigationView.getMenu().getItem(1).setChecked(true);
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     private NavigationBarView.OnItemSelectedListener buttomnavFunction = new NavigationBarView.OnItemSelectedListener() {
