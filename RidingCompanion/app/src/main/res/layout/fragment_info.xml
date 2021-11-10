@@ -152,5 +152,12 @@
             app:layout_constraintBottom_toBottomOf="@+id/textView6"
             app:layout_constraintStart_toEndOf="@+id/textView6" />
 
+        <TextView
+            android:id="@+id/birthday_show"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/textView14"
+            app:layout_constraintStart_toStartOf="@+id/editTextPhone" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

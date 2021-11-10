@@ -12,10 +12,12 @@ public class DBHelper {
 
     public void createTables(){
         sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS users " +
-                "(id INTEGER PRIMARY KEY, username TEXT PRIMARY KEY, email TEXT, phone TEXT, dob TEXT)");
+                "(username TEXT PRIMARY KEY, email TEXT, phone TEXT, dob TEXT)");
         sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS histories " +
-                "(id INTEGER PRIMARY KEY, username TEXT, historyID TEXT PRIMARY KEY, distance TEXT, time TEXT, avg_speed TEXT, calories TEXT)");
+                "(historyID TEXT PRIMARY KEY, username TEXT, distance TEXT, time TEXT, avg_speed TEXT, calories TEXT)");
     }
+
+//    id INTEGER PRIMARY KEY
 
     public void addUser(String username, String email, String phone, String dob){
         createTables();
