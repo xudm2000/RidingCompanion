@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 public class RankFragment extends Fragment {
 
     private FirebaseFirestore db;
+    private Button button;
 
     public RankFragment() {
         // Required empty public constructor
@@ -36,9 +38,44 @@ public class RankFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
+        View fragmentView = inflater.inflate(R.layout.fragment_rank, container, false);
+
+        button = (Button) fragmentView.findViewById(R.id.refresh);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                refresh();
+            }
+        });
+
+        ArrayList<String> displayUsers = new ArrayList<>();
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("com.example.ridingcompanion", Context.MODE_PRIVATE);
+        String temp = sharedPreferences.getString("num", "");
+        String[] users = temp.split("\\|");
+        int count = 0;
+        for(String user : users){
+            if(count == 5){
+                break;
+            }
+            if(!user.equals("")) {
+                String[] info = user.split(",");
+                String um = info[0];
+                String nd = info[1];
+                displayUsers.add(String.format("Username:%s\nNumber of Days:%s", um, nd));
+                count++;
+            }
+        }
+
+        ArrayAdapter arrayAdapter = new ArrayAdapter(this.getActivity(), android.R.layout.simple_list_item_1, displayUsers);
+        ListView listView = (ListView) fragmentView.findViewById(R.id.listView);
+        listView.setAdapter(arrayAdapter);
+        return fragmentView;
+    }
+
+    public void refresh(){
         db = FirebaseFirestore.getInstance();
 //        db.collection("users").document("xudm2000").set(new RankUser("xudm2000", 1));
-        View fragmentView = inflater.inflate(R.layout.fragment_rank, container, false);
 
         db.collection("users")
                 .get()
@@ -56,18 +93,5 @@ public class RankFragment extends Fragment {
                         }
                     }
                 });
-
-        ArrayList<String> displayUsers = new ArrayList<>();
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("com.example.ridingcompanion", Context.MODE_PRIVATE);
-        String temp = sharedPreferences.getString("num", "");
-
-//        for(RankUser user : users){
-//            displayUsers.add(String.format("Username:%s\nNumber of Days:%s", user.username, user.numOfDay));
-//        }
-//
-//        ArrayAdapter arrayAdapter = new ArrayAdapter(this.getActivity(), android.R.layout.simple_list_item_1, displayUsers);
-//        ListView listView = (ListView) fragmentView.findViewById(R.id.listView);
-//        listView.setAdapter(arrayAdapter);
-        return fragmentView;
     }
 }
