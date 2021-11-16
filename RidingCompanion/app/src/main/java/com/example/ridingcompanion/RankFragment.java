@@ -1,15 +1,12 @@
 package com.example.ridingcompanion;
 
-import static android.content.ContentValues.TAG;
-
 import android.content.Context;
-import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,21 +46,14 @@ public class RankFragment extends Fragment {
             }
         });
 
+        Context context = getActivity().getApplicationContext();
+        SQLiteDatabase sqLiteDatabase = context.openOrCreateDatabase("users", Context.MODE_PRIVATE,null);
+        DBHelper dbHelper = new DBHelper(sqLiteDatabase);
         ArrayList<String> displayUsers = new ArrayList<>();
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("com.example.ridingcompanion", Context.MODE_PRIVATE);
-        String temp = sharedPreferences.getString("num", "");
-        String[] users = temp.split("\\|");
-        int count = 0;
-        for(String user : users){
-            if(count == 5){
-                break;
-            }
+        ArrayList<RankUser> rankUsers = dbHelper.top5Users();
+        for(RankUser user : rankUsers){
             if(!user.equals("")) {
-                String[] info = user.split(",");
-                String um = info[0];
-                String nd = info[1];
-                displayUsers.add(String.format("Username:%s\nNumber of Days:%s", um, nd));
-                count++;
+                displayUsers.add(String.format("Username:   %s\nNumber of Days:   %s", user.username, user.numOfDay));
             }
         }
 
@@ -83,13 +73,12 @@ public class RankFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            SharedPreferences sharedPreferences = getActivity().getSharedPreferences("com.example.ridingcompanion", Context.MODE_PRIVATE);
+                            Context context = getActivity().getApplicationContext();
+                            SQLiteDatabase sqLiteDatabase = context.openOrCreateDatabase("users", Context.MODE_PRIVATE,null);
+                            DBHelper dbHelper = new DBHelper(sqLiteDatabase);
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                String temp = sharedPreferences.getString("num", "");
-                                sharedPreferences.edit().putString("num", temp + "|" + document.getString("username") + "," + document.getLong("numOfDay").toString()).apply();
+                                dbHelper.addRankUser(document.getString("username"), document.getLong("numOfDay").intValue());
                             }
-                        }else{
-
                         }
                     }
                 });
