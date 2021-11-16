@@ -12,8 +12,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.Switch;
 import android.widget.TextView;
 
 public class InfoFragment extends Fragment {
@@ -31,6 +33,7 @@ public class InfoFragment extends Fragment {
     private RadioButton female;
     private Button logout;
     private Button saveButton;
+    private Switch loginSwitch;
 
     public InfoFragment() {
         // Required empty public constructor
@@ -69,6 +72,7 @@ public class InfoFragment extends Fragment {
         male = (RadioButton) fragmentView.findViewById(R.id.radioButton);
         female = (RadioButton) fragmentView.findViewById(R.id.radioButton2);
         error_msg = (TextView) fragmentView.findViewById(R.id.error_msg);
+        loginSwitch = (Switch) fragmentView.findViewById(R.id.auto_login);
 
         male.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,8 +89,24 @@ public class InfoFragment extends Fragment {
         });
 
         String current_username = sharedPreferences.getString("current", "");
-        username.setText(current_username);
+        String login_username = sharedPreferences.getString("login", "");
+        if(!login_username.equals("__no user__") && !login_username.equals("")){
+            loginSwitch.setChecked(true);
+        }else{
+            loginSwitch.setChecked(false);
+        }
 
+        loginSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(loginSwitch.isChecked()){
+                    sharedPreferences.edit().putString("login", current_username).apply();
+                }else{
+                    sharedPreferences.edit().putString("login", "__no user__").apply();
+                }
+            }
+        });
+
+        username.setText(current_username);
         Context context = getActivity().getApplicationContext();
         SQLiteDatabase sqLiteDatabase = context.openOrCreateDatabase("users", Context.MODE_PRIVATE, null);
         DBHelper dbHelper = new DBHelper(sqLiteDatabase);
@@ -110,6 +130,7 @@ public class InfoFragment extends Fragment {
     public void logout() {
         SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences("com.example.ridingcompanion", Context.MODE_PRIVATE);
         sharedPreferences.edit().putString("current", "__no user__").apply();
+        sharedPreferences.edit().putString("login", "__no user__").apply();
         gotoLoginPage();
     }
 

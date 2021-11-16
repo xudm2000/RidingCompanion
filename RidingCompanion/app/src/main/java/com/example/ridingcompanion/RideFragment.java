@@ -70,18 +70,6 @@ public class RideFragment extends Fragment {
             }
         });
 
-//        fusedLocationProviderClient.getLastLocation().addOnCompleteListener(getActivity(), task -> {
-//            Location myLocation = task.getResult();
-//            if(task.isSuccessful() && myLocation != null){
-//                LatLng myLatLng = new LatLng(myLocation.getLatitude(),
-//                        myLocation.getLongitude());
-//
-//                CameraPosition myPosition = new CameraPosition.Builder()
-//                        .target(myLatLng).zoom(17).bearing(90).tilt(30).build();
-//                mMap.animateCamera(
-//                        CameraUpdateFactory.newCameraPosition(myPosition));
-//            }
-//        });
         return fragmentView;
     }
 

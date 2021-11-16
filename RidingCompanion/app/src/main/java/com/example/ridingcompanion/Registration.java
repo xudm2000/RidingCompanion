@@ -97,6 +97,7 @@ public class Registration extends AppCompatActivity {
         if(sharedPreferences.getString(um, "").equals("")){
             if(pw.equals(con_pw)){
                 sharedPreferences.edit().putString("current", um).apply();
+                sharedPreferences.edit().putString("login", "__no user__").apply();
                 sharedPreferences.edit().putString(um, pw).apply();
 
                 Context context = getApplicationContext();

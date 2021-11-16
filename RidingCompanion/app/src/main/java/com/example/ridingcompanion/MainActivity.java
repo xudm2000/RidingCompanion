@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         SharedPreferences sharedPreferences = getSharedPreferences("com.example.ridingcompanion", Context.MODE_PRIVATE);
 
-        if(!sharedPreferences.getString("current", "__no user__").equals("__no user__")){
+        if(!sharedPreferences.getString("login", "__no user__").equals("__no user__")){
             Intent intent =new Intent(this, MainPage.class);
             startActivity(intent);
         }else {
@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         String pw = password.getText().toString();
         if(sharedPreferences.getString(um, "__wrong password").equals(pw)) {
             sharedPreferences.edit().putString("current", um).apply();
+            sharedPreferences.edit().putString("login", "__no user__").apply();
             gotoMainPage(um);
         }else{
             textView = (TextView) findViewById(R.id.textView);

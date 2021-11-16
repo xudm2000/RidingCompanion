@@ -233,7 +233,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"
-            android:checked="true"
+            android:checked="false"
             android:text="Auto Login"
             app:layout_constraintBottom_toTopOf="@+id/logout"
             app:layout_constraintEnd_toEndOf="parent"

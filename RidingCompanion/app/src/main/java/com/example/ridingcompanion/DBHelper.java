@@ -18,7 +18,7 @@ public class DBHelper {
         sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS rankusers " +
                 "(username TEXT PRIMARY KEY, numOfDay INTEGER)");
         sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS histories " +
-                "(historyID TEXT PRIMARY KEY, username TEXT, distance TEXT, time TEXT, avg_speed TEXT, calories TEXT)");
+                "(historyID TEXT PRIMARY KEY, username TEXT, distance TEXT, time TEXT, avg_speed TEXT, calories TEXT, date TEXT)");
     }
 
     public void addUser(String username, String email, String phone, String dob, String weight, String height, String gender){
@@ -62,7 +62,7 @@ public class DBHelper {
         sqLiteDatabase.execSQL(String.format("INSERT INTO rankusers (username, numOfDay) VALUES ('%s', '%s')", username, String.valueOf(numOfDay)));
     }
 
-    public void updateRankUser(String username, String email, String phone, String dob) {
+    public void updateRankUser(String username) {
         createTables();
         RankUser user = getRankUser(username);
         sqLiteDatabase.execSQL(String.format("UPDATE rankusers set numOfDay = '%s' where username = '%s'", String.valueOf(user.numOfDay+1), username));
@@ -104,5 +104,10 @@ public class DBHelper {
         }
 
         return users;
+    }
+
+    public void addHistory(String username, String distance, String time, String avg_speed, String calories, String date){
+        createTables();
+        sqLiteDatabase.execSQL(String.format("INSERT INTO histories (username, distance, time, avg_speed, calories, date) VALUES ('%s', '%s', '%s', '%s', '%s', '%s')", username, distance, time, avg_speed, calories, date));
     }
 }
