@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 public class InfoFragment extends Fragment {
@@ -22,7 +23,12 @@ public class InfoFragment extends Fragment {
     private EditText confirm_password;
     private EditText email;
     private EditText phone;
+    private EditText weight;
+    private EditText height;
     private TextView birthday;
+    private TextView error_msg;
+    private RadioButton male;
+    private RadioButton female;
     private Button logout;
     private Button saveButton;
 
@@ -57,34 +63,90 @@ public class InfoFragment extends Fragment {
         confirm_password = (EditText) fragmentView.findViewById(R.id.editTextConfirmPassword);
         email = (EditText) fragmentView.findViewById(R.id.editTextEmail);
         phone = (EditText) fragmentView.findViewById(R.id.editTextPhone);
+        weight = (EditText) fragmentView.findViewById(R.id.editWeight);
+        height = (EditText) fragmentView.findViewById(R.id.editHeight);
         birthday = (TextView) fragmentView.findViewById(R.id.birthday_show);
+        male = (RadioButton) fragmentView.findViewById(R.id.radioButton);
+        female = (RadioButton) fragmentView.findViewById(R.id.radioButton2);
+        error_msg = (TextView) fragmentView.findViewById(R.id.error_msg);
+
+        male.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                female.setChecked(false);
+            }
+        });
+
+        female.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                male.setChecked(false);
+            }
+        });
 
         String current_username = sharedPreferences.getString("current", "");
         username.setText(current_username);
 
         Context context = getActivity().getApplicationContext();
-        SQLiteDatabase sqLiteDatabase = context.openOrCreateDatabase("users", Context.MODE_PRIVATE,null);
+        SQLiteDatabase sqLiteDatabase = context.openOrCreateDatabase("users", Context.MODE_PRIVATE, null);
         DBHelper dbHelper = new DBHelper(sqLiteDatabase);
         User user = dbHelper.getUser(current_username);
         email.setText(user.getEmail());
         phone.setText(user.getPhone());
         birthday.setText(user.getDob());
+        weight.setText(user.getWeight());
+        height.setText(user.getHeight());
+        male.setChecked(false);
+        female.setChecked(false);
+        if (user.getGender().equals("male")) {
+            male.setChecked(true);
+        } else {
+            female.setChecked(true);
+        }
 
         return fragmentView;
     }
 
-    public void logout(){
+    public void logout() {
         SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences("com.example.ridingcompanion", Context.MODE_PRIVATE);
         sharedPreferences.edit().putString("current", "__no user__").apply();
         gotoLoginPage();
     }
 
-    public void gotoLoginPage(){
+    public void gotoLoginPage() {
         Intent intent = new Intent(this.getActivity(), MainActivity.class);
         startActivity(intent);
     }
 
-    public void save(){
+    public void save() {
+        SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences("com.example.ridingcompanion", Context.MODE_PRIVATE);
+        String pw = password.getText().toString();
+        String con_pw = confirm_password.getText().toString();
+        String um = sharedPreferences.getString("current", "");
 
+        if(!pw.equals("")){
+            if (pw.equals(con_pw)) {
+                sharedPreferences.edit().putString(um, pw).apply();
+            } else {
+                error_msg.setText("passwords are not same!");
+            }
+        }
+
+        Context context = getActivity().getApplicationContext();
+        SQLiteDatabase sqLiteDatabase = context.openOrCreateDatabase("users", Context.MODE_PRIVATE, null);
+        DBHelper dbHelper = new DBHelper(sqLiteDatabase);
+        String gender = "";
+        if (male.isChecked()) {
+            gender = "male";
+        } else {
+            gender = "female";
+        }
+        if (email.getText().toString().equals("") || phone.getText().toString().equals("") || birthday.getText().toString().equals("") || weight.getText().toString().equals("") || weight.getText().toString().equals("")) {
+            error_msg.setText("Field(s) cannot be empty!");
+            return;
+        }
+        dbHelper.updateUser(um, email.getText().toString(), phone.getText().toString(), birthday.getText().toString(), weight.getText().toString(), height.getText().toString(), gender);
+        saveButton.setText("Saved");
+        saveButton.setEnabled(false);
     }
 }

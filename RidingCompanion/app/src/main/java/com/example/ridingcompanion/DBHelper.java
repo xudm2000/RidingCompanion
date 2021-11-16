@@ -14,21 +14,21 @@ public class DBHelper {
 
     public void createTables(){
         sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS users " +
-                "(username TEXT PRIMARY KEY, email TEXT, phone TEXT, dob TEXT)");
+                "(username TEXT PRIMARY KEY, email TEXT, phone TEXT, dob TEXT, weight TEXT, height TEXT, gender TEXT)");
         sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS rankusers " +
                 "(username TEXT PRIMARY KEY, numOfDay INTEGER)");
         sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS histories " +
                 "(historyID TEXT PRIMARY KEY, username TEXT, distance TEXT, time TEXT, avg_speed TEXT, calories TEXT)");
     }
 
-    public void addUser(String username, String email, String phone, String dob){
+    public void addUser(String username, String email, String phone, String dob, String weight, String height, String gender){
         createTables();
-        sqLiteDatabase.execSQL(String.format("INSERT INTO users (username, email, phone, dob) VALUES ('%s', '%s','%s','%s')", username, email, phone, dob));
+        sqLiteDatabase.execSQL(String.format("INSERT INTO users (username, email, phone, dob, weight, height, gender) VALUES ('%s', '%s','%s','%s', '%s', '%s', '%s')", username, email, phone, dob, weight, height, gender));
     }
 
-    public void updateUser(String username, String email, String phone, String dob) {
+    public void updateUser(String username, String email, String phone, String dob, String weight, String height, String gender) {
         createTables();
-        sqLiteDatabase.execSQL(String.format("UPDATE users set phone = '%s', email = '%s', dob = '%s' where username = '%s'", phone, email, dob, username));
+        sqLiteDatabase.execSQL(String.format("UPDATE users set phone = '%s', email = '%s', dob = '%s', weight = '%s', height = '%s', gender = '%s' where username = '%s'", phone, email, dob, weight, height, gender, username));
     }
 
     public User getUser(String username){
@@ -37,6 +37,9 @@ public class DBHelper {
 
         int phoneIndex = c.getColumnIndex("phone");
         int emailIndex = c.getColumnIndex("email");
+        int weightIndex = c.getColumnIndex("weight");
+        int heightIndex = c.getColumnIndex("height");
+        int genderIndex = c.getColumnIndex("gender");
         int dobIndex = c.getColumnIndex("dob");
 
         c.moveToFirst();
@@ -45,7 +48,10 @@ public class DBHelper {
             String phone = c.getString(phoneIndex);
             String email = c.getString(emailIndex);
             String dob = c.getString(dobIndex);
-            return new User(username, email, phone, dob);
+            String weight = c.getString(weightIndex);
+            String height = c.getString(heightIndex);
+            String gender = c.getString(genderIndex);
+            return new User(username, email, phone, dob, weight, height, gender);
         }else{
             return null;
         }
