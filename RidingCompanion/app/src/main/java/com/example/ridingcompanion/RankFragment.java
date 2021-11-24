@@ -1,6 +1,7 @@
 package com.example.ridingcompanion;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
@@ -83,5 +84,8 @@ public class RankFragment extends Fragment {
                         }
                     }
                 });
+        Intent intent = new Intent(getActivity(), MainPage.class);
+        intent.putExtra("fragment", "rank");
+        startActivity(intent);
     }
 }

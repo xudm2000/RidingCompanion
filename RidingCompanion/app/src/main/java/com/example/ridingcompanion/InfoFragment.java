@@ -151,6 +151,8 @@ public class InfoFragment extends Fragment {
             } else {
                 error_msg.setText("passwords are not same!");
             }
+        }else{
+            error_msg.setText("passwords cannot be empty!");
         }
 
         Context context = getActivity().getApplicationContext();

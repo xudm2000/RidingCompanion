@@ -30,7 +30,10 @@ public class MainPage extends AppCompatActivity {
         }else if(intentString.equals("checkin")){
             getSupportFragmentManager().beginTransaction().replace(R.id.container, new CheckinFragment()).commit();
             buttonNavigationView.getMenu().getItem(1).setChecked(true);
-        }else {
+        }else if(intentString.equals("rank")){
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, new RankFragment()).commit();
+            buttonNavigationView.getMenu().getItem(2).setChecked(true);
+        } else{
             getSupportFragmentManager().beginTransaction().replace(R.id.container, new RideFragment()).commit();
         }
     }
