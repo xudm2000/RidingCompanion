@@ -18,7 +18,7 @@ public class DBHelper {
         sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS rankusers " +
                 "(username TEXT PRIMARY KEY, numOfDay INTEGER)");
         sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS histories " +
-                "(historyID TEXT PRIMARY KEY, username TEXT, distance TEXT, time TEXT, avg_speed TEXT, calories TEXT, date TEXT)");
+                "(historyID TEXT PRIMARY KEY, username TEXT, distance TEXT, time TEXT, avg_speed TEXT, calories TEXT, date TEXT, image TEXT)");
     }
 
     public void addUser(String username, String email, String phone, String dob, String weight, String height, String gender){
@@ -59,13 +59,17 @@ public class DBHelper {
 
     public void addRankUser(String username, int numOfDay){
         createTables();
-        sqLiteDatabase.execSQL(String.format("INSERT INTO rankusers (username, numOfDay) VALUES ('%s', '%s')", username, String.valueOf(numOfDay)));
+        RankUser user = getRankUser(username);
+        if(user == null) {
+            sqLiteDatabase.execSQL(String.format("INSERT INTO rankusers (username, numOfDay) VALUES ('%s', '%s')", username, String.valueOf(numOfDay)));
+        }else if(numOfDay != user.numOfDay){
+            updateRankUser(username, numOfDay);
+        }
     }
 
-    public void updateRankUser(String username) {
+    public void updateRankUser(String username, int numOfDay) {
         createTables();
-        RankUser user = getRankUser(username);
-        sqLiteDatabase.execSQL(String.format("UPDATE rankusers set numOfDay = '%s' where username = '%s'", String.valueOf(user.numOfDay+1), username));
+        sqLiteDatabase.execSQL(String.format("UPDATE rankusers set numOfDay = '%s' where username = '%s'", String.valueOf(numOfDay), username));
     }
 
     public RankUser getRankUser(String username){
@@ -106,8 +110,36 @@ public class DBHelper {
         return users;
     }
 
-    public void addHistory(String username, String distance, String time, String avg_speed, String calories, String date){
+    public void addHistory(String username, String distance, String time, String avg_speed, String calories, String date, String image){
         createTables();
-        sqLiteDatabase.execSQL(String.format("INSERT INTO histories (username, distance, time, avg_speed, calories, date) VALUES ('%s', '%s', '%s', '%s', '%s', '%s')", username, distance, time, avg_speed, calories, date));
+        sqLiteDatabase.execSQL(String.format("INSERT INTO histories (username, distance, time, avg_speed, calories, date, image) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s')", username, distance, time, avg_speed, calories, date, image));
+    }
+
+    public ArrayList<History> getUserHistory(String username){
+        createTables();
+        Cursor c = sqLiteDatabase.rawQuery(String.format("Select * from histories where username like '%s'", username), null);
+
+        int distanceIndex = c.getColumnIndex("distance");
+        int timeIndex = c.getColumnIndex("time");
+        int speedIndex = c.getColumnIndex("avg_speed");
+        int caloriesIndex = c.getColumnIndex("calories");
+        int dateIndex = c.getColumnIndex("date");
+        int imageIndex = c.getColumnIndex("image");
+
+        c.moveToFirst();
+        ArrayList<History> histories = new ArrayList<>();
+
+        while (!c.isAfterLast()){
+            String distance = c.getString(distanceIndex);
+            String time = c.getString(timeIndex);
+            String avg_speed = c.getString(speedIndex);
+            String calories = c.getString(caloriesIndex);
+            String date = c.getString(dateIndex);
+            String image = c.getString(imageIndex);
+            histories.add(new History(username, distance, time, avg_speed, calories, date, image));
+            c.moveToNext();
+        }
+
+        return histories;
     }
 }

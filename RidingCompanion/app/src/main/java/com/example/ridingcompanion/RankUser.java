@@ -8,7 +8,8 @@ public class RankUser {
     public long numOfDay;
 
     public RankUser(){
-
+        username = "";
+        numOfDay = 0;
     }
 
     public RankUser(String username, long numOfDay) {

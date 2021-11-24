@@ -24,11 +24,14 @@ public class MainPage extends AppCompatActivity {
         buttonNavigationView.setOnItemSelectedListener(buttomnavFunction);
 
         String intentString = getIntent().getStringExtra("fragment");
-        if(intentString == null) {
+
+        if(intentString == null){
             getSupportFragmentManager().beginTransaction().replace(R.id.container, new RideFragment()).commit();
-        }else{
+        }else if(intentString.equals("checkin")){
             getSupportFragmentManager().beginTransaction().replace(R.id.container, new CheckinFragment()).commit();
             buttonNavigationView.getMenu().getItem(1).setChecked(true);
+        }else {
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, new RideFragment()).commit();
         }
     }
 

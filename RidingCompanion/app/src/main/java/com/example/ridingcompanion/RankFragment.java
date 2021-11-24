@@ -65,7 +65,7 @@ public class RankFragment extends Fragment {
 
     public void refresh(){
         db = FirebaseFirestore.getInstance();
-//        db.collection("users").document("xudm2000").set(new RankUser("xudm2000", 1));
+//        db.collection("users").document("user").set(new RankUser("xudm2000", 1));
 
         db.collection("users")
                 .get()
@@ -73,7 +73,8 @@ public class RankFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            Context context = getActivity().getApplicationContext();
+//                            Context context = getActivity().getApplicationContext();
+                            Context context = getContext();
                             SQLiteDatabase sqLiteDatabase = context.openOrCreateDatabase("users", Context.MODE_PRIVATE,null);
                             DBHelper dbHelper = new DBHelper(sqLiteDatabase);
                             for (QueryDocumentSnapshot document : task.getResult()) {
