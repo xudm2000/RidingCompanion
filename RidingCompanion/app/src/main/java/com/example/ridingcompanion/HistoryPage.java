@@ -57,10 +57,12 @@ public class HistoryPage extends AppCompatActivity {
         String image = intent.getStringExtra("image");
 
         dateView.setText("Date: " + date);
-        speedView.setText("Speed: " + speed);
-        distanceView.setText("distance" + distance);
-        timeView.setText("time" + time);
-        caloriesView.setText("calories" + calories);
+        speedView.setText("Speed: " + speed + " m/s");
+        distanceView.setText("Distance: " + distance + " km");
+        int min = (int) Double.parseDouble(time) / 60;
+        int sec = (int) Double.parseDouble(time) - min * 60;
+        timeView.setText(String.format("Time: %d min %d sec", min, sec));
+        caloriesView.setText("Calories: " + calories + " cal");
 
         if(!image.equals("")) {
             byte[] bytes_new = Base64.getDecoder().decode(image);

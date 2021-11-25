@@ -62,7 +62,9 @@ public class Result extends AppCompatActivity {
         speedVal = intent.getDoubleExtra("avg_speed", 0);
         speed.setText("Average Speed: " + speedVal + " m/s");
         timeVal = intent.getDoubleExtra("time", 0);
-        time.setText(String.valueOf("Time: " + timeVal + " s"));
+        int min = (int) timeVal / 60;
+        int sec = (int) timeVal - min * 60;
+        time.setText(String.format("Time: %d min %d sec", min, sec));
         distanceVal = intent.getDoubleExtra("distance", 0);
         distance.setText("Distance: " + distanceVal + " km");
         caloriesVal = intent.getDoubleExtra("calories", 0);

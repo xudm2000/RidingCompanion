@@ -12,9 +12,14 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.AudioAttributes;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -25,6 +30,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.io.IOException;
 import java.util.LinkedList;
 
 public class Riding extends AppCompatActivity {
@@ -45,6 +51,9 @@ public class Riding extends AppCompatActivity {
     private double totalDistance;
     private double totalCalories;
     private final double COEFFICIENT = 62.15;
+
+    private Switch musicSwitch;
+    private MediaPlayer mediaPlayer;
 
     private class RidingRunnable implements Runnable{
         @Override
@@ -68,6 +77,29 @@ public class Riding extends AppCompatActivity {
         }
     }
 
+    public class MusicPlay implements Runnable{
+
+        @Override
+        public void run() {
+            String url = "https://win-web-rh01-sycdn.kuwo.cn/ffb45d001a94a6aa42b95131582e98b3/619ece5c/resource/n1/32/98/4007603884.mp3";
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+
+            try {
+                mediaPlayer.setDataSource(url);
+                mediaPlayer.prepare(); // might take long! (for buffering, etc)
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    musicSwitch.setEnabled(true);
+                }
+            });
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +109,25 @@ public class Riding extends AppCompatActivity {
         time = (TextView) findViewById(R.id.timeShow);
         distance = (TextView) findViewById(R.id.total_distance);
         calories = (TextView) findViewById(R.id.calories);
+
+        mediaPlayer = new MediaPlayer();
+
+        musicSwitch = (Switch) findViewById(R.id.switch1);
+        musicSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(musicSwitch.isChecked()){
+                    musicSwitch.setText("Music On");
+                    mediaPlayer.start();
+                }else{
+                    musicSwitch.setText("Music Off");
+                    mediaPlayer.pause();
+                }
+            }
+        });
+        musicSwitch.setEnabled(false);
+
+        MusicPlay musicRunnable = new MusicPlay();
+        new Thread(musicRunnable).start();
 
         totalDistance = 0;
         totalCalories = 0;
