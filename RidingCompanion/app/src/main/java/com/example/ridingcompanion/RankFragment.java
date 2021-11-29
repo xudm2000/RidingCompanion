@@ -52,9 +52,11 @@ public class RankFragment extends Fragment {
         DBHelper dbHelper = new DBHelper(sqLiteDatabase);
         ArrayList<String> displayUsers = new ArrayList<>();
         ArrayList<RankUser> rankUsers = dbHelper.top5Users();
+        int rankIndex = 1;
         for(RankUser user : rankUsers){
-            if(!user.equals("")) {
-                displayUsers.add(String.format("Username:   %s\nNumber of Days:   %s", user.username, user.numOfDay));
+            if(!user.username.equals("")) {
+                displayUsers.add(String.format("%d. %s (# Check-in: %s)", rankIndex, user.username, user.numOfDay));
+                rankIndex++;
             }
         }
 
