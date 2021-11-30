@@ -42,6 +42,7 @@ public class Riding extends AppCompatActivity {
     private GoogleMap mMap;
     private MapView mapView;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 12;
+    private TextView speed;
     private TextView time;
     private TextView distance;
     private TextView calories;
@@ -51,6 +52,7 @@ public class Riding extends AppCompatActivity {
     private double totalDistance;
     private double totalCalories;
     private final double COEFFICIENT = 62.15;
+    private boolean isStop = true;
 
     private Switch musicSwitch;
     private MediaPlayer mediaPlayer;
@@ -65,7 +67,7 @@ public class Riding extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            time.setText(String.valueOf(finalT));
+                            time.setText(String.valueOf(finalT)+" s");
                         }
                     });
                     Thread.sleep(1000);
@@ -78,7 +80,6 @@ public class Riding extends AppCompatActivity {
     }
 
     public class MusicPlay implements Runnable{
-
         @Override
         public void run() {
             String url = "https://win-web-rh01-sycdn.kuwo.cn/ffb45d001a94a6aa42b95131582e98b3/619ece5c/resource/n1/32/98/4007603884.mp3";
@@ -172,8 +173,8 @@ public class Riding extends AppCompatActivity {
             }
         }
 
-        time.setText("0");
-
+        time.setText("0 s");
+        speed.setText("0 m/s");
         int permission = ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION);
 
         mapView.onCreate(savedInstanceState);
@@ -201,7 +202,7 @@ public class Riding extends AppCompatActivity {
         Intent intent = new Intent(this, Result.class);
         intent.putExtra("distance", totalDistance);
         intent.putExtra("calories", totalCalories);
-        double totalTime = Double.parseDouble(time.getText().toString());
+        double totalTime = Double.parseDouble(time.getText().toString().substring(0, time.getText().toString().length()-2));
         intent.putExtra("time", totalTime);
         intent.putExtra("avg_speed", totalDistance*1000/totalTime);
         startActivity(intent);
@@ -218,10 +219,17 @@ public class Riding extends AppCompatActivity {
 
     public void updateLocationInfo(Location location){
         float speed_location = location.getSpeed();
-        TextView speed = (TextView) findViewById(R.id.speed);
-        speed.setText(String.valueOf(speed_location));
+
         float[] results = new float[3];
         Location.distanceBetween(startLat, startLong, location.getLatitude(), location.getLongitude(), results);
+        if(results[0]/1000.0 < 0.00009){
+            if(isStop) {
+                speed_location = 0;
+            }
+            isStop = true;
+        }else{
+            isStop = false;
+        }
         totalDistance += results[0]/1000.0;
         distance.setText(String.format("%.2f km", totalDistance));
         startLat = location.getLatitude();
@@ -229,6 +237,8 @@ public class Riding extends AppCompatActivity {
         totalCalories = totalDistance*COEFFICIENT;
         String cal = String.format("%.2f cal", totalDistance*COEFFICIENT);
         calories.setText(cal);
+        speed = (TextView) findViewById(R.id.speed);
+        speed.setText(String.format("%.2f m/s", speed_location));
 
         int permission = ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION);
         mapView.getMapAsync(googleMap -> {

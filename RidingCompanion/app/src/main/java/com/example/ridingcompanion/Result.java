@@ -60,15 +60,15 @@ public class Result extends AppCompatActivity {
         Intent intent = getIntent();
 
         speedVal = intent.getDoubleExtra("avg_speed", 0);
-        speed.setText("Average Speed: " + speedVal + " m/s");
+        speed.setText(String.format("Average Speed: %.2f m/s", speedVal));
         timeVal = intent.getDoubleExtra("time", 0);
         int min = (int) timeVal / 60;
         int sec = (int) timeVal - min * 60;
         time.setText(String.format("Time: %d min %d sec", min, sec));
         distanceVal = intent.getDoubleExtra("distance", 0);
-        distance.setText("Distance: " + distanceVal + " km");
+        distance.setText(String.format("Distance: %.2f km", distanceVal));
         caloriesVal = intent.getDoubleExtra("calories", 0);
-        calories.setText("Calories: " + caloriesVal + " cal");
+        calories.setText(String.format("Calories: %.2f cal", caloriesVal));
 
         selfie_image = (ImageView) findViewById(R.id.imageView);
 
