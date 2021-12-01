@@ -8,8 +8,9 @@ public class History {
     private String avg_speed;
     private String date;
     private String image;
+    private String route;
 
-    public History(String username, String distance, String time, String calories, String avg_speed, String date, String image) {
+    public History(String username, String distance, String time, String calories, String avg_speed, String date, String image, String route) {
         this.username = username;
         this.distance = distance;
         this.time = time;
@@ -17,6 +18,7 @@ public class History {
         this.avg_speed = avg_speed;
         this.date = date;
         this.image = image;
+        this.route = route;
     }
 
     public String getUsername() {
@@ -73,5 +75,13 @@ public class History {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getRoute() {
+        return route;
+    }
+
+    public void setRoute(String route) {
+        this.route = route;
     }
 }

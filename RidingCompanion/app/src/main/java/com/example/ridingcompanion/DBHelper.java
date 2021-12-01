@@ -18,7 +18,7 @@ public class DBHelper {
         sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS rankusers " +
                 "(username TEXT PRIMARY KEY, numOfDay INTEGER)");
         sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS histories " +
-                "(historyID TEXT PRIMARY KEY, username TEXT, distance TEXT, time TEXT, avg_speed TEXT, calories TEXT, date TEXT, image TEXT)");
+                "(historyID TEXT PRIMARY KEY, username TEXT, distance TEXT, time TEXT, avg_speed TEXT, calories TEXT, date TEXT, image TEXT, route TEXT)");
     }
 
     public void addUser(String username, String email, String phone, String dob, String weight, String height, String gender){
@@ -110,9 +110,9 @@ public class DBHelper {
         return users;
     }
 
-    public void addHistory(String username, String distance, String time, String avg_speed, String calories, String date, String image){
+    public void addHistory(String username, String distance, String time, String avg_speed, String calories, String date, String image, String route){
         createTables();
-        sqLiteDatabase.execSQL(String.format("INSERT INTO histories (username, distance, time, avg_speed, calories, date, image) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s')", username, distance, time, avg_speed, calories, date, image));
+        sqLiteDatabase.execSQL(String.format("INSERT INTO histories (username, distance, time, avg_speed, calories, date, image, route) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')", username, distance, time, avg_speed, calories, date, image, route));
     }
 
     public ArrayList<History> getUserHistory(String username){
@@ -125,6 +125,7 @@ public class DBHelper {
         int caloriesIndex = c.getColumnIndex("calories");
         int dateIndex = c.getColumnIndex("date");
         int imageIndex = c.getColumnIndex("image");
+        int routeIndex = c.getColumnIndex("route");
 
         c.moveToFirst();
         ArrayList<History> histories = new ArrayList<>();
@@ -136,7 +137,8 @@ public class DBHelper {
             String calories = c.getString(caloriesIndex);
             String date = c.getString(dateIndex);
             String image = c.getString(imageIndex);
-            histories.add(new History(username, distance, time, avg_speed, calories, date, image));
+            String route = c.getString(routeIndex);
+            histories.add(new History(username, distance, time, avg_speed, calories, date, image, route));
             c.moveToNext();
         }
 

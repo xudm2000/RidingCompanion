@@ -83,8 +83,7 @@ public class RideFragment extends Fragment {
 
         mapView.getMapAsync(googleMap -> {
             mMap = googleMap;
-            int permission = ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION);
-            if (permission == PackageManager.PERMISSION_DENIED) {
+            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
             } else {
                 mMap.setMyLocationEnabled(true);

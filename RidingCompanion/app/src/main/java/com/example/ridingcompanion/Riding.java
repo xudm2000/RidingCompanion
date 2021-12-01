@@ -1,6 +1,7 @@
 package com.example.ridingcompanion;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -31,6 +32,9 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.IOException;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class Riding extends AppCompatActivity {
@@ -47,6 +51,7 @@ public class Riding extends AppCompatActivity {
     private TextView distance;
     private TextView calories;
     private boolean isCancel = false;
+    private double timeCount = 0;
     private double startLat;
     private double startLong;
     private double totalDistance;
@@ -57,21 +62,37 @@ public class Riding extends AppCompatActivity {
     private Switch musicSwitch;
     private MediaPlayer mediaPlayer;
 
+    private ArrayList<Double> lats;
+    private ArrayList<Double> longs;
+
     private class RidingRunnable implements Runnable{
+        @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
         public void run() {
             try {
-                int t = 0;
+                Instant start = Instant.now();
                 while(!isCancel){
-                    int finalT = t;
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            time.setText(String.valueOf(finalT)+" s");
+                            int seconds = (int) Duration.between(start, Instant.now()).getSeconds();
+                            timeCount = seconds;
+                            int minutes = seconds / 60;
+                            seconds = seconds - minutes * 60;
+                            int hour = minutes / 60;
+                            minutes = minutes - hour * 60;
+                            String counter = "";
+                            if(hour > 0){
+                                counter = String.format("%d h %d m %d s", hour, minutes, seconds);
+                            }else if(minutes > 0){
+                                counter = String.format("%d m %d s", minutes, seconds);
+                            }else{
+                                counter = String.format("%d s", seconds);
+                            }
+                            time.setText(counter);
                         }
                     });
                     Thread.sleep(1000);
-                    t++;
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -105,6 +126,9 @@ public class Riding extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_riding);
+
+        lats = new ArrayList<>();
+        longs = new ArrayList<>();
 
         mapView = (MapView) findViewById(R.id.fragment_map_riding);
         time = (TextView) findViewById(R.id.timeShow);
@@ -202,9 +226,19 @@ public class Riding extends AppCompatActivity {
         Intent intent = new Intent(this, Result.class);
         intent.putExtra("distance", totalDistance);
         intent.putExtra("calories", totalCalories);
-        double totalTime = Double.parseDouble(time.getText().toString().substring(0, time.getText().toString().length()-2));
-        intent.putExtra("time", totalTime);
-        intent.putExtra("avg_speed", totalDistance*1000/totalTime);
+        intent.putExtra("time", timeCount);
+        intent.putExtra("avg_speed", totalDistance*1000/timeCount);
+
+        double[] lats_array = new double[lats.size()];
+        double[] longs_array = new double[longs.size()];
+
+        for(int i=0;i<lats.size();i++){
+            lats_array[i] = lats.get(i);
+            longs_array[i] = longs.get(i);
+        }
+
+        intent.putExtra("lats", lats_array);
+        intent.putExtra("longs", longs_array);
         startActivity(intent);
     }
 
@@ -218,8 +252,8 @@ public class Riding extends AppCompatActivity {
     }
 
     public void updateLocationInfo(Location location){
+        boolean toRecord = false;
         float speed_location = location.getSpeed();
-
         float[] results = new float[3];
         Location.distanceBetween(startLat, startLong, location.getLatitude(), location.getLongitude(), results);
         if(results[0]/1000.0 < 0.00009){
@@ -229,7 +263,14 @@ public class Riding extends AppCompatActivity {
             isStop = true;
         }else{
             isStop = false;
+            toRecord = true;
         }
+
+        if(toRecord){
+            lats.add(location.getLatitude());
+            longs.add(location.getLongitude());
+        }
+
         totalDistance += results[0]/1000.0;
         distance.setText(String.format("%.2f km", totalDistance));
         startLat = location.getLatitude();

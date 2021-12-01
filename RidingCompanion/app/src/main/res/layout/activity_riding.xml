@@ -10,20 +10,21 @@
         android:id="@+id/time_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
         android:text="Time"
-        app:layout_constraintEnd_toStartOf="@+id/calories_title"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/distance_title"
-        app:layout_constraintTop_toTopOf="@+id/distance_title" />
+        android:textColor="#5187F4"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toTopOf="@+id/speed_title"
+        app:layout_constraintStart_toStartOf="@+id/speed_title" />
 
     <TextView
         android:id="@+id/distance_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="88dp"
+        android:layout_marginStart="10dp"
         android:text="Distance"
-        app:layout_constraintBottom_toTopOf="@+id/stop"
-        app:layout_constraintEnd_toStartOf="@+id/time_title"
+        app:layout_constraintBottom_toBottomOf="@+id/speed_title"
+        app:layout_constraintEnd_toStartOf="@+id/calories_title"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/speed_title" />
 
@@ -31,8 +32,9 @@
         android:id="@+id/speed_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="130dp"
         android:text="Speed"
-        app:layout_constraintBaseline_toBaselineOf="@+id/distance_title"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/distance_title"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent" />
@@ -41,11 +43,12 @@
         android:id="@+id/calories_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
         android:text="Calories"
-        app:layout_constraintBaseline_toBaselineOf="@+id/time_title"
+        app:layout_constraintBottom_toBottomOf="@+id/distance_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/time_title" />
+        app:layout_constraintStart_toEndOf="@+id/distance_title" />
 
     <com.google.android.gms.maps.MapView
         android:id="@+id/fragment_map_riding"
@@ -90,9 +93,12 @@
         android:id="@+id/timeShow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="17dp"
-        app:layout_constraintStart_toStartOf="@+id/time_title"
-        app:layout_constraintTop_toBottomOf="@+id/time_title" />
+        android:layout_marginStart="10dp"
+        android:text=""
+        android:textSize="10sp"
+        android:textColor="#5187F4"
+        app:layout_constraintBottom_toBottomOf="@+id/time_title"
+        app:layout_constraintStart_toEndOf="@+id/time_title" />
 
     <TextView
         android:id="@+id/total_distance"

@@ -12,6 +12,27 @@
         tools:context=".HistoryPage">
 
         <TextView
+            android:id="@+id/distanceInfo2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="Distance: "
+            android:textColor="#62C1FF"
+            app:layout_constraintStart_toStartOf="@+id/dateInfo2"
+            app:layout_constraintTop_toBottomOf="@+id/dateInfo2" />
+
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/fragment_map_riding3"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="250dp"
+            android:layout_height="200dp"
+            android:layout_marginTop="52dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.496"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView11" />
+
+        <TextView
             android:id="@+id/textView11"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -27,10 +48,21 @@
             android:id="@+id/dateInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+            android:layout_marginStart="50dp"
             android:text="Date"
+            app:layout_constraintStart_toEndOf="@+id/dateInfo2"
+            app:layout_constraintTop_toTopOf="@+id/dateInfo2" />
+
+        <TextView
+            android:id="@+id/dateInfo2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="-10dp"
+            android:layout_marginTop="50dp"
+            android:text="Date: "
+            android:textColor="#62C1FF"
             app:layout_constraintStart_toStartOf="@+id/textView11"
-            app:layout_constraintTop_toBottomOf="@+id/textView11" />
+            app:layout_constraintTop_toBottomOf="@+id/fragment_map_riding3" />
 
         <TextView
             android:id="@+id/distanceInfo"
@@ -51,6 +83,16 @@
             app:layout_constraintTop_toBottomOf="@+id/distanceInfo" />
 
         <TextView
+            android:id="@+id/timeInfo2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="Time: "
+            android:textColor="#62C1FF"
+            app:layout_constraintStart_toStartOf="@+id/distanceInfo2"
+            app:layout_constraintTop_toBottomOf="@+id/distanceInfo2" />
+
+        <TextView
             android:id="@+id/speedInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -58,6 +100,16 @@
             android:text="speed"
             app:layout_constraintStart_toStartOf="@+id/timeInfo"
             app:layout_constraintTop_toBottomOf="@+id/timeInfo" />
+
+        <TextView
+            android:id="@+id/speedInfo2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="Speed: "
+            android:textColor="#62C1FF"
+            app:layout_constraintStart_toStartOf="@+id/timeInfo2"
+            app:layout_constraintTop_toBottomOf="@+id/timeInfo2" />
 
         <TextView
             android:id="@+id/caleriesInfo"
@@ -68,12 +120,22 @@
             app:layout_constraintStart_toStartOf="@+id/speedInfo"
             app:layout_constraintTop_toBottomOf="@+id/speedInfo" />
 
+        <TextView
+            android:id="@+id/caleriesInfo2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="Caleries: "
+            android:textColor="#62C1FF"
+            app:layout_constraintStart_toStartOf="@+id/speedInfo2"
+            app:layout_constraintTop_toBottomOf="@+id/speedInfo2" />
+
         <ImageView
             android:id="@+id/imageView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:layout_marginBottom="50dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginBottom="60dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"

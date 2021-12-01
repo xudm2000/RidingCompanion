@@ -111,6 +111,7 @@ public class CheckinFragment extends Fragment {
                 intent.putExtra("time", target_history.getTime());
                 intent.putExtra("calories", target_history.getCalories());
                 intent.putExtra("image", target_history.getImage());
+                intent.putExtra("route", target_history.getRoute());
                 startActivity(intent);
             }
         });

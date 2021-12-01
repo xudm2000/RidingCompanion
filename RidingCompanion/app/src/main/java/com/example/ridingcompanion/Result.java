@@ -3,10 +3,12 @@ package com.example.ridingcompanion;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -19,6 +21,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
@@ -47,28 +58,77 @@ public class Result extends AppCompatActivity {
     private double caloriesVal;
     private String imageString;
 
+    private GoogleMap mMap;
+    private MapView mapView;
+
+    private String route = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
+
+        Intent intent = getIntent();
+        double[] lats_positions = intent.getDoubleArrayExtra("lats");
+        double[] longs_positions = intent.getDoubleArrayExtra("longs");
+
+        mapView = (MapView) findViewById(R.id.fragment_map_riding2);
+        mapView.onCreate(savedInstanceState);
+        mapView.onResume();
+        try {
+            MapsInitializer.initialize(this.getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        mapView.getMapAsync(googleMap -> {
+            mMap = googleMap;
+            double prev_lat = lats_positions[0];
+            double prev_long = longs_positions[0];
+
+            route += (String.valueOf(prev_lat) + "," + String.valueOf(prev_long) + "|");
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            builder.include(new LatLng(lats_positions[0], longs_positions[0]));
+            for(int i=1;i<lats_positions.length;i++) {
+                mMap.addPolyline(new PolylineOptions().add(new LatLng(lats_positions[i], longs_positions[i]), new LatLng(prev_lat, prev_long)).color(R.color.design_default_color_error));
+                builder.include(new LatLng(lats_positions[i], longs_positions[i]));
+                prev_lat = lats_positions[i];
+                prev_long = longs_positions[i];
+                route += (String.valueOf(prev_lat) + "," + String.valueOf(prev_long) + "|");
+            }
+            LatLngBounds bounds = builder.build();
+            int padding = 100; // offset from edges of the map in pixels
+            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+
+            mMap.moveCamera(cu);
+        });
 
         speed = (TextView) findViewById(R.id.textView6);
         time = (TextView) findViewById(R.id.textView8);
         distance = (TextView) findViewById(R.id.textView9);
         calories = (TextView) findViewById(R.id.textView10);
 
-        Intent intent = getIntent();
-
         speedVal = intent.getDoubleExtra("avg_speed", 0);
-        speed.setText(String.format("Average Speed: %.2f m/s", speedVal));
+        speed.setText(String.format("%.2f m/s", speedVal));
         timeVal = intent.getDoubleExtra("time", 0);
+
         int min = (int) timeVal / 60;
         int sec = (int) timeVal - min * 60;
-        time.setText(String.format("Time: %d min %d sec", min, sec));
+        int hour = min / 60;
+        min = min - hour * 60;
+
+        if(hour > 0){
+            time.setText(String.format("%d hr %d min %d sec", hour, min, sec));
+        }else if(min > 0){
+            time.setText(String.format("%d min %d sec", min, sec));
+        }else{
+            time.setText(String.format("%d sec", sec));
+        }
+
         distanceVal = intent.getDoubleExtra("distance", 0);
-        distance.setText(String.format("Distance: %.2f km", distanceVal));
+        distance.setText(String.format("%.2f km", distanceVal));
         caloriesVal = intent.getDoubleExtra("calories", 0);
-        calories.setText(String.format("Calories: %.2f cal", caloriesVal));
+        calories.setText(String.format("%.2f cal", caloriesVal));
 
         selfie_image = (ImageView) findViewById(R.id.imageView);
 
@@ -125,7 +185,7 @@ public class Result extends AppCompatActivity {
             SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm");
             Date d = new Date();
             date = formatter.format(d);
-            dbHelper.addHistory(username, String.valueOf(distanceVal), String.valueOf(timeVal), String.valueOf(speedVal), String.valueOf(caloriesVal), date, imageString);
+            dbHelper.addHistory(username, String.valueOf(distanceVal), String.valueOf(timeVal), String.valueOf(speedVal), String.valueOf(caloriesVal), date, imageString, route);
 
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             RankUser rankUser = dbHelper.getRankUser(username);
