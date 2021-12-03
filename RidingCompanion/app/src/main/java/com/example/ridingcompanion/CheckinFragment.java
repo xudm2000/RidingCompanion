@@ -70,7 +70,16 @@ public class CheckinFragment extends Fragment {
                 DatePickerDialog dateDialog= new DatePickerDialog(v.getContext(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        String dateChosen = (monthOfYear + 1) + "/" + dayOfMonth + "/" + year;
+                        String dateChosen = "";
+                        if(monthOfYear + 1 < 10){
+                            dateChosen = "0";
+                        }
+                        dateChosen += (monthOfYear + 1) + "/";
+                        
+                        if(dayOfMonth < 10){
+                            dateChosen += "0";
+                        }
+                        dateChosen += dayOfMonth + "/" + year;
                         dateSelect.setText(dateChosen);
 
                         ArrayList<History> temp_histories = new ArrayList<>();
