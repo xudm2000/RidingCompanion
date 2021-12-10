@@ -54,8 +54,8 @@ public class Riding extends AppCompatActivity {
     private double timeCount = 0;
     private double startLat;
     private double startLong;
-    private double totalDistance;
-    private double totalCalories;
+    private double totalDistance = 0;
+    private double totalCalories = 0;
     private final double COEFFICIENT = 62.15;
     private boolean isStop = true;
 
@@ -103,7 +103,7 @@ public class Riding extends AppCompatActivity {
     public class MusicPlay implements Runnable{
         @Override
         public void run() {
-            String url = "https://win-web-rh01-sycdn.kuwo.cn/ffb45d001a94a6aa42b95131582e98b3/619ece5c/resource/n1/32/98/4007603884.mp3";
+            String url = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
             try {
@@ -132,24 +132,30 @@ public class Riding extends AppCompatActivity {
 
         mapView = (MapView) findViewById(R.id.fragment_map_riding);
         time = (TextView) findViewById(R.id.timeShow);
+        speed = (TextView) findViewById(R.id.speed);
         distance = (TextView) findViewById(R.id.total_distance);
         calories = (TextView) findViewById(R.id.calories);
 
-        mediaPlayer = new MediaPlayer();
-
         musicSwitch = (Switch) findViewById(R.id.switch1);
-        musicSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(musicSwitch.isChecked()){
-                    musicSwitch.setText("Music On");
-                    mediaPlayer.start();
-                }else{
-                    musicSwitch.setText("Music Off");
-                    mediaPlayer.pause();
-                }
+        musicSwitch.setEnabled(false);
+
+        mediaPlayer = new MediaPlayer();
+        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mediaPlayer) {
+                musicSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if(musicSwitch.isChecked()){
+                            musicSwitch.setText("Music On");
+                            mediaPlayer.start();
+                        }else{
+                            musicSwitch.setText("Music Off");
+                            mediaPlayer.pause();
+                        }
+                    }
+                });
             }
         });
-        musicSwitch.setEnabled(false);
 
         MusicPlay musicRunnable = new MusicPlay();
         new Thread(musicRunnable).start();
@@ -199,6 +205,8 @@ public class Riding extends AppCompatActivity {
 
         time.setText("0 s");
         speed.setText("0 m/s");
+        distance.setText("0 km");
+        calories.setText("0 cal");
         int permission = ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION);
 
         mapView.onCreate(savedInstanceState);
@@ -223,6 +231,10 @@ public class Riding extends AppCompatActivity {
     }
 
     public void stop(View view){
+        if(mediaPlayer.isPlaying()) {
+            mediaPlayer.stop();
+        }
+
         Intent intent = new Intent(this, Result.class);
         intent.putExtra("distance", totalDistance);
         intent.putExtra("calories", totalCalories);

@@ -101,9 +101,6 @@ public class DBHelper {
             String username = c.getString(usernameIndex);
             int numOfDay = c.getInt(numIndex);
             users.add(new RankUser(username, numOfDay));
-            if(users.size() >= 5){
-                break;
-            }
             c.moveToNext();
         }
 

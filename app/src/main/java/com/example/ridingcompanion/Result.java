@@ -83,24 +83,26 @@ public class Result extends AppCompatActivity {
 
         mapView.getMapAsync(googleMap -> {
             mMap = googleMap;
-            double prev_lat = lats_positions[0];
-            double prev_long = longs_positions[0];
+            if(lats_positions != null && lats_positions.length != 0 && longs_positions != null && longs_positions.length != 0) {
+                double prev_lat = lats_positions[0];
+                double prev_long = longs_positions[0];
 
-            route += (String.valueOf(prev_lat) + "," + String.valueOf(prev_long) + "|");
-            LatLngBounds.Builder builder = new LatLngBounds.Builder();
-            builder.include(new LatLng(lats_positions[0], longs_positions[0]));
-            for(int i=1;i<lats_positions.length;i++) {
-                mMap.addPolyline(new PolylineOptions().add(new LatLng(lats_positions[i], longs_positions[i]), new LatLng(prev_lat, prev_long)).color(R.color.design_default_color_error));
-                builder.include(new LatLng(lats_positions[i], longs_positions[i]));
-                prev_lat = lats_positions[i];
-                prev_long = longs_positions[i];
                 route += (String.valueOf(prev_lat) + "," + String.valueOf(prev_long) + "|");
-            }
-            LatLngBounds bounds = builder.build();
-            int padding = 100; // offset from edges of the map in pixels
-            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+                LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                builder.include(new LatLng(lats_positions[0], longs_positions[0]));
+                for (int i = 1; i < lats_positions.length; i++) {
+                    mMap.addPolyline(new PolylineOptions().add(new LatLng(lats_positions[i], longs_positions[i]), new LatLng(prev_lat, prev_long)).color(R.color.design_default_color_error));
+                    builder.include(new LatLng(lats_positions[i], longs_positions[i]));
+                    prev_lat = lats_positions[i];
+                    prev_long = longs_positions[i];
+                    route += (String.valueOf(prev_lat) + "," + String.valueOf(prev_long) + "|");
+                }
+                LatLngBounds bounds = builder.build();
+                int padding = 100; // offset from edges of the map in pixels
+                CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
 
-            mMap.moveCamera(cu);
+                mMap.moveCamera(cu);
+            }
         });
 
         speed = (TextView) findViewById(R.id.textView6);

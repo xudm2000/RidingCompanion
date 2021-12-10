@@ -10,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
@@ -19,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CalendarView;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -34,8 +36,8 @@ public class CheckinFragment extends Fragment {
     public ArrayList<History> histories;
     public ArrayList<String> displayHistories;
     public ArrayAdapter arrayAdapter;
-    private TextView dateSelect;
     public ListView listView;
+    public CalendarView calendar;
 
     public CheckinFragment() {
         // Required empty public constructor
@@ -48,6 +50,32 @@ public class CheckinFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_checkin, container, false);
 
+        calendar = (CalendarView) view.findViewById(R.id.calendarView);
+        calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener(){
+            @Override
+            public void onSelectedDayChange(@NonNull CalendarView calendarView, int year, int monthOfYear, int dayOfMonth) {
+                String dateChosen = "";
+                if(monthOfYear + 1 < 10){
+                    dateChosen = "0";
+                }
+                dateChosen += (monthOfYear + 1) + "/";
+
+                if(dayOfMonth < 10){
+                    dateChosen += "0";
+                }
+                dateChosen += dayOfMonth + "/" + year;
+
+                ArrayList<History> temp_histories = new ArrayList<>();
+                for(History history : histories){
+                    String date = history.getDate().split(" ")[0];
+                    if(date.equals(dateChosen)){
+                        temp_histories.add(history);
+                    }
+                }
+                refreshList(view, temp_histories);
+            }
+        });
+
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("com.example.ridingcompanion", Context.MODE_PRIVATE);
         String current_username = sharedPreferences.getString("current", "");
 
@@ -59,42 +87,6 @@ public class CheckinFragment extends Fragment {
 
         refreshList(view, histories);
 
-        dateSelect = (TextView) view.findViewById(R.id.dateSelect);
-        dateSelect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Calendar c = Calendar.getInstance();
-                int mYear = c.get(Calendar.YEAR);
-                int mMonth = c.get(Calendar.MONTH);
-                int mDay = c.get(Calendar.DAY_OF_MONTH);
-                DatePickerDialog dateDialog= new DatePickerDialog(v.getContext(), new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        String dateChosen = "";
-                        if(monthOfYear + 1 < 10){
-                            dateChosen = "0";
-                        }
-                        dateChosen += (monthOfYear + 1) + "/";
-                        
-                        if(dayOfMonth < 10){
-                            dateChosen += "0";
-                        }
-                        dateChosen += dayOfMonth + "/" + year;
-                        dateSelect.setText(dateChosen);
-
-                        ArrayList<History> temp_histories = new ArrayList<>();
-                        for(History history : histories){
-                            String date = history.getDate().split(" ")[0];
-                            if(date.equals(dateChosen)){
-                                temp_histories.add(history);
-                            }
-                        }
-                        refreshList(view, temp_histories);
-                    }
-                }, mYear, mMonth, mDay);
-                dateDialog.show();
-            }
-        });
         return view;
     }
 

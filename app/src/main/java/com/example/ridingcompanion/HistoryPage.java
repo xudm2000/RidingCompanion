@@ -91,22 +91,24 @@ public class HistoryPage extends AppCompatActivity {
 
         mapView.getMapAsync(googleMap -> {
             mMap = googleMap;
-            double prev_lat = lats_positions.get(0);
-            double prev_long = longs_positions.get(0);
+            if(lats_positions != null && lats_positions.size() != 0 && longs_positions != null && longs_positions.size() != 0) {
+                double prev_lat = lats_positions.get(0);
+                double prev_long = longs_positions.get(0);
 
-            LatLngBounds.Builder builder = new LatLngBounds.Builder();
-            builder.include(new LatLng(lats_positions.get(0), longs_positions.get(0)));
-            for(int i=1;i<lats_positions.size();i++) {
-                mMap.addPolyline(new PolylineOptions().add(new LatLng(lats_positions.get(i), longs_positions.get(i)), new LatLng(prev_lat, prev_long)).color(R.color.design_default_color_error));
-                builder.include(new LatLng(lats_positions.get(i), longs_positions.get(i)));
-                prev_lat = lats_positions.get(i);
-                prev_long = longs_positions.get(i);
+                LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                builder.include(new LatLng(lats_positions.get(0), longs_positions.get(0)));
+                for (int i = 1; i < lats_positions.size(); i++) {
+                    mMap.addPolyline(new PolylineOptions().add(new LatLng(lats_positions.get(i), longs_positions.get(i)), new LatLng(prev_lat, prev_long)).color(R.color.design_default_color_error));
+                    builder.include(new LatLng(lats_positions.get(i), longs_positions.get(i)));
+                    prev_lat = lats_positions.get(i);
+                    prev_long = longs_positions.get(i);
+                }
+                LatLngBounds bounds = builder.build();
+                int padding = 100; // offset from edges of the map in pixels
+                CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+
+                mMap.moveCamera(cu);
             }
-            LatLngBounds bounds = builder.build();
-            int padding = 100; // offset from edges of the map in pixels
-            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
-
-            mMap.moveCamera(cu);
         });
 
         dateView.setText(date);
