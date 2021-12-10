@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:context=".Registration">
+
+        <EditText
+            android:id="@+id/reg_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:ems="10"
+            android:hint="username"
+            android:inputType="textPersonName"
+            android:textSize="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+        <EditText
+            android:id="@+id/reg_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:ems="10"
+            android:hint="phone number"
+            android:inputType="phone"
+            android:textSize="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/reg_confirm" />
+
+        <EditText
+            android:id="@+id/reg_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="email address"
+            android:inputType="textEmailAddress"
+            android:textSize="12dp"
+            android:layout_marginTop="30dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/radioButton3" />
+
+        <TextView
+            android:id="@+id/reg_birthday"
+            android:layout_width="82dp"
+            android:layout_height="22dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="30dp"
+            android:hint="birthday"
+            android:inputType="date"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="@+id/reg_email"
+            app:layout_constraintTop_toBottomOf="@+id/reg_email" />
+
+        <EditText
+            android:id="@+id/reg_confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:ems="10"
+            android:hint="confirm password"
+            android:inputType="textPassword"
+            android:textSize="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/reg_password" />
+
+        <EditText
+            android:id="@+id/reg_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:ems="10"
+            android:hint="password"
+            android:inputType="textPassword"
+            android:textSize="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/reg_username" />
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:layout_marginBottom="50dp"
+            android:onClick="register"
+            android:text="Register"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/reg_height" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:text="Registration"
+            android:textSize="34sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/error_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text=""
+            android:textColor="@color/design_default_color_error"
+            app:layout_constraintBottom_toTopOf="@+id/button3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="55dp"
+            android:layout_height="30dp"
+            android:layout_marginBottom="-5dp"
+            android:text="Date"
+            android:textSize="7sp"
+            app:layout_constraintBottom_toBottomOf="@+id/reg_birthday"
+            app:layout_constraintEnd_toEndOf="@+id/reg_email" />
+
+        <EditText
+            android:id="@+id/reg_weight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="-5dp"
+            android:layout_marginTop="30dp"
+            android:ems="10"
+            android:hint="Weight in lbs"
+            android:inputType="number"
+            android:textSize="12dp"
+            app:layout_constraintStart_toStartOf="@+id/reg_birthday"
+            app:layout_constraintTop_toBottomOf="@+id/reg_birthday" />
+
+        <EditText
+            android:id="@+id/reg_height"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:ems="10"
+            android:hint="Height in ft"
+            android:inputType="numberDecimal"
+            android:textSize="12dp"
+            app:layout_constraintStart_toStartOf="@+id/reg_weight"
+            app:layout_constraintTop_toBottomOf="@+id/reg_weight" />
+
+        <RadioButton
+            android:id="@+id/radioButton3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Male"
+            android:checked="true"
+            android:layout_marginTop="30dp"
+            app:layout_constraintStart_toStartOf="@+id/reg_phone"
+            app:layout_constraintTop_toBottomOf="@+id/reg_phone" />
+
+        <RadioButton
+            android:id="@+id/radioButton4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Female"
+            android:checked="false"
+            app:layout_constraintBottom_toBottomOf="@+id/radioButton3"
+            app:layout_constraintEnd_toEndOf="@+id/reg_phone" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

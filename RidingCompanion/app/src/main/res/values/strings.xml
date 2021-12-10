@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Riding Companion</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="registration_underline"><u>Click here to sign up</u></string>
+</resources>
