@@ -96,10 +96,6 @@ public class Registration extends AppCompatActivity {
         }
         if(sharedPreferences.getString(um, "").equals("")){
             if(pw.equals(con_pw)){
-                sharedPreferences.edit().putString("current", um).apply();
-                sharedPreferences.edit().putString("login", "__no user__").apply();
-                sharedPreferences.edit().putString(um, pw).apply();
-
                 Context context = getApplicationContext();
                 SQLiteDatabase sqLiteDatabase = context.openOrCreateDatabase("users", Context.MODE_PRIVATE,null);
                 DBHelper dbHelper = new DBHelper(sqLiteDatabase);
@@ -114,6 +110,10 @@ public class Registration extends AppCompatActivity {
                     return;
                 }
                 dbHelper.addUser(um, email.getText().toString(), phone.getText().toString(), birthday.getText().toString(), weight.getText().toString(), height.getText().toString(), gender);
+
+                sharedPreferences.edit().putString("current", um).apply();
+                sharedPreferences.edit().putString("login", "__no user__").apply();
+                sharedPreferences.edit().putString(um, pw).apply();
                 gotoMainPage(um);
             }else{
                 textView.setText("passwords are not same!");
