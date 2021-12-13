@@ -151,8 +151,6 @@ public class InfoFragment extends Fragment {
             } else {
                 error_msg.setText("passwords are not same!");
             }
-        }else{
-            error_msg.setText("passwords cannot be empty!");
         }
 
         Context context = getActivity().getApplicationContext();
@@ -164,7 +162,7 @@ public class InfoFragment extends Fragment {
         } else {
             gender = "female";
         }
-        if (email.getText().toString().equals("") || phone.getText().toString().equals("") || birthday.getText().toString().equals("") || weight.getText().toString().equals("") || weight.getText().toString().equals("")) {
+        if (email.getText().toString().equals("") || phone.getText().toString().equals("") || birthday.getText().toString().equals("") || weight.getText().toString().equals("") || height.getText().toString().equals("")) {
             error_msg.setText("Field(s) cannot be empty!");
             return;
         }
